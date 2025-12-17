@@ -1,13 +1,14 @@
 import axios from "axios";
 
 
-
+let page = 1;
+let totalPages = null;
 
 const filmsWebsite = axios.create({
     baseURL: 'https://api.themoviedb.org/3',
     params:{
         api_key: import.meta.env.VITE_TMDB_KEY,
-        
+        page,
 
     }
 
@@ -37,4 +38,11 @@ export async function getGenresId() {
         
     }
     
+}
+
+export async function loadMovies() {
+    const res = await filmsWebsite.get('/movie/popular', {params: {page}})
+    totalPages ??= res.data.results.total_pages
+    page += 1
+    showMovies(res.data.results)
 }
